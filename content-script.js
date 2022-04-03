@@ -96,34 +96,39 @@ async function finishCurrentReport(content) {
 }
 
 async function executeReport (message) {
-    debugger;
+    // debugger;
     console.log("execute report");
+    const postNumber = 5;
 
     const initialPost =  await waitForElm("//div[contains(@class, 'channel-post')]");
     console.log("initialPost ", initialPost);
     const posts = document.getElementsByClassName("channel-post");
     console.log("posts ", posts);
-    const post = posts[posts.length - 1];
-    rightClick(post);
 
-    const reportElement = await waitForElm("//div[@id='bubble-contextmenu']/div[span[contains(text(), 'Report')]]");
-    reportElement.click();
-    await sleep(2000);
-    
-    const otherElement = await waitForElm("//div[@class='popup-body']/button[span[contains(text(), 'Other')]]");
-    otherElement.click();
-    await sleep(2000);
+    for (var i = 1; i <= postNumber; i++) { 
 
-    const reportInputElement = await waitForElm("//div[@class='popup-body']//div[contains(@class, 'input-field-input')]");
-    reportInputElement.textContent = message;
-    await sleep(2000);
+        const post = posts[posts.length - i];
+        rightClick(post);
 
-    debugger;
-    var submitReportBtn = await waitForElm("//div[contains(@class, 'popup-container')]//button[contains(@class, 'rp')]");
-    submitReportBtn.click();
-    await sleep(2000);
+        const reportElement = await waitForElm("//div[@id='bubble-contextmenu']/div[span[contains(text(), 'Report')]]");
+        reportElement.click();
+        await sleep(2000);
+        
+        const otherElement = await waitForElm("//div[@class='popup-body']/button[span[contains(text(), 'Other')]]");
+        otherElement.click();
+        await sleep(2000);
 
-    await resolveWithRetry(() => document.getElementsByClassName("popup-container"), elems => !elems || elems.length == 0, 0);
+        const reportInputElement = await waitForElm("//div[@class='popup-body']//div[contains(@class, 'input-field-input')]");
+        reportInputElement.textContent = message;
+        await sleep(2000);
+
+        debugger;
+        var submitReportBtn = await waitForElm("//div[contains(@class, 'popup-container')]//button[contains(@class, 'rp')]");
+        submitReportBtn.click();
+        await sleep(2000);
+
+        await resolveWithRetry(() => document.getElementsByClassName("popup-container"), elems => !elems || elems.length == 0, 0);
+    }
 
     console.log("executeReport finished");
 
